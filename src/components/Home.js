@@ -6,6 +6,7 @@ const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`
 
 function Home() {
   const [movies, setMovies] = useState([]);
+  const [visibleMovies, setVisibleMovies] = useState(8); // Numri i filma që do të shfaqen fillimisht
 
   useEffect(() => {
     fetchMovies();
@@ -21,11 +22,15 @@ function Home() {
     }
   };
 
+  const showMoreMovies = () => {
+    setVisibleMovies(visibleMovies + 8); // Shto 8 filmat e tjerë
+  };
+
   return (
     <div className="container">
       <h1 className="mt-4 mb-4 text-center">Filmat</h1>
       <div className="row">
-        {movies.map((movie) => (
+        {movies.slice(0, visibleMovies).map((movie) => (
           <div key={movie.id} className="col-md-3 mb-4">
             <div className="card">
               <img
@@ -40,9 +45,11 @@ function Home() {
           </div>
         ))}
       </div>
-      <button className="btn btn-primary mt-4" onClick={fetchMovies}>
-        Shiko më shumë filma
-      </button>
+      {visibleMovies < movies.length && (
+        <button className="btn btn-primary mt-4" onClick={showMoreMovies}>
+          Shiko më shumë filma
+        </button>
+      )}
     </div>
   );
 }
